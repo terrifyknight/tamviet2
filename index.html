@@ -330,7 +330,7 @@
     function submitRegister(e) {
       e.preventDefault();
       const btn = document.getElementById('btnSubmit');
-      btn.disabled = true; btn.innerHTML = "Đang đồng bộ lên Google Sheet...";
+      btn.disabled = true; btn.innerHTML = "Loading";
 
       const genderRadio = document.querySelector('input[name="gender"]:checked');
       const payload = { action: 'register', vendorCode: vendorSelect.value, factoryName: factorySelect.value, gender: genderRadio ? genderRadio.value : "" };
@@ -347,7 +347,7 @@
           formContainer.className = "hidden";
           fieldsBlock.classList.add('hidden');
           document.getElementById('subHeader').textContent = "Vui lòng chọn Nhà thầu trước khi nhập dữ liệu.";
-          showModal(true, "Đăng Ký Thành Công!", "Thông tin lao động đã được ghi nhận trực tiếp vào danh sách của nhà thầu trên Google Sheet.");
+          showModal(true, "Đăng Ký Thành Công!");
         } else {
           showModal(false, "Thao Tác Thất Bại", resMsg);
         }
@@ -358,7 +358,7 @@
     function submitCheckin(e) {
       e.preventDefault();
       const btn = document.getElementById('btnCheckin');
-      btn.disabled = true; btn.innerHTML = "Đang đối chiếu dữ liệu điểm danh...";
+      btn.disabled = true; btn.innerHTML = "Checking";
 
       const payload = {
         action: 'checkin',
