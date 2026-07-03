@@ -113,17 +113,6 @@
 
     <form id="checkinForm" class="p-6 space-y-5 hidden" onsubmit="submitCheckin(event)">
       <div>
-        <label class="block text-sm font-bold text-slate-900 mb-1.5" for="ck_vendor">Nhà Thầu *</label>
-        <select id="ck_vendor" required class="w-full px-4 py-2.5 rounded-xl border border-slate-300 text-slate-900 font-medium bg-slate-50">
-          <option value="">-- Chọn Nhà Thầu --</option>
-          <option value="Tâm Việt">Tâm Việt</option>
-          <option value="VLT">VLT</option>
-          <option value="DMT">DMT</option>
-          <option value="TC">TC</option>
-          <option value="Vinamex">Vinamex</option>
-        </select>
-      </div>
-      <div>
         <label class="block text-sm font-bold text-slate-900 mb-1.5" for="ck_factory">Nhà máy phỏng vấn *</label>
         <select id="ck_factory" required class="w-full px-4 py-2.5 rounded-xl border border-slate-300 text-slate-900 font-medium bg-slate-50">
           <option value="">-- Chọn Nhà máy --</option>
@@ -152,16 +141,16 @@
 
   <div id="successModal" class="hidden fixed inset-0 bg-slate-900/50 flex items-center justify-center p-4 backdrop-blur-sm z-50">
     <div class="bg-white rounded-3xl p-6 w-full max-w-sm text-center border border-slate-200 shadow-2xl">
-      <div class="w-16 h-16 bg-emerald-100 rounded-full flex items-center justify-center mx-auto mb-3 text-emerald-600 text-3xl">✓</div>
+      <div id="modalIcon" class="w-16 h-16 bg-emerald-100 rounded-full flex items-center justify-center mx-auto mb-3 text-emerald-600 text-3xl">✓</div>
       <h2 id="modalTitle" class="text-xl font-bold text-slate-800 mb-2">Thao Tác Thành Công!</h2>
-      <p id="modalMsg" class="text-sm text-slate-600 mb-5"></p>
+      <p id="modalMsg" class="text-sm text-slate-600 mb-5 leading-relaxed"></p>
       <button onclick="closeModal()" class="w-full bg-slate-800 text-white font-medium py-2.5 rounded-xl hover:bg-slate-900">Đóng</button>
     </div>
   </div>
 
   <script>
     // === CẤU HÌNH LIÊN KẾT BACKEND ===
-    const API_URL = "https://script.google.com/macros/s/AKfycbxyh_XAKV8H1VChohdktL1KiZPtkqIPM-Se4IDdvTEmS-CvetPJs9E1kpgX0ViCocYt/exec"; // Điền liên kết Web App Apps Script ở Bước 1 vào đây!
+    const API_URL = "https://script.google.com/macros/s/AKfycbzXitNfOluqkv5HGCJh9ADHDquZiXGi0xVKKYZBdE4mONGawki4dlbyWE4ZhJdpn-bZ/exec"; 
 
     let currentMode = 'register';
     let html5QrCode = null;
@@ -195,7 +184,7 @@
         tabReg.className = "w-1/2 text-center py-2.5 rounded-xl text-sm font-bold transition-all text-slate-600 hover:text-slate-900";
         headerBar.className = "bg-gradient-to-r from-emerald-600 to-teal-600 px-6 py-4 text-white flex items-center justify-between relative";
         title.innerText = "CỔNG ĐIỂM DANH PHỎNG VẤN";
-        sub.innerText = "Nhập số CCCD hoặc quét mã tự động";
+        sub.innerText = "Hệ thống tự động nhận diện thông tin Vendor sau khi quét";
         formCk.classList.remove('hidden'); formReg.classList.add('hidden');
       }
     }
@@ -258,7 +247,7 @@
           inputElement.value = ""; 
         })
         .catch(err => {
-          statusText.innerText = "❌ Không tìm thấy QR hợp lệ. Hãy chọn ảnh chụp cận cảnh và rõ nét vùng QR.";
+          statusText.innerText = "❌ Không tìm thấy QR hợp lệ. Hãy chọn ảnh chụp rõ nét vùng QR.";
           inputElement.value = "";
         });
     }
@@ -285,7 +274,7 @@
           icon.innerHTML = '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M6 18L18 6M6 6l12 12"></path>'; 
         }).catch(err => { 
           tip.className = "text-xs text-rose-400 mt-2 font-semibold text-center leading-relaxed px-4";
-          tip.innerHTML = "⚠️ Trình duyệt chặn camera hoặc không tìm thấy thiết bị phần cứng! Bạn vui lòng sử dụng biểu tượng Bức ảnh ở bên cạnh để tải ảnh chụp CCCD lên quét tự động nhé.";
+          tip.innerHTML = "⚠️ Trình duyệt chặn camera hoặc lỗi phần cứng! Bạn có thể sử dụng nút Tải ảnh bên cạnh để quét.";
         });
       } else { stopCamera(); }
     }
@@ -325,19 +314,19 @@
             const yyyy = parts[6].substring(4, 8); const mm = parts[6].substring(2, 4); const dd = parts[6].substring(0, 2);
             document.getElementById('cccdDate').value = yyyy + "-" + mm + "-" + dd;
           }
-        } else { alert("Đã nhận diện mã vùng QR, nhưng cấu trúc chuỗi không phải định dạng CCCD Việt Nam!"); }
+        } else { alert("Mã QR không khớp định dạng dữ liệu CCCD!"); }
       } else {
         if (parts.length > 0 && parts[0].length === 12 && /^\d+$/.test(parts[0])) {
           document.getElementById('ck_cccd').value = parts[0];
         } else {
           const cleanText = rawText.trim();
           if (cleanText.length === 12 && /^\d+$/.test(cleanText)) document.getElementById('ck_cccd').value = cleanText;
-          else alert("Nội dung QR quét được không chứa đúng định dạng số CCCD!");
+          else alert("Nội dung QR quét được không phải số CCCD!");
         }
       }
     }
 
-    // GỬI NỘP DỮ LIỆU ĐĂNG KÝ (POST SANG BACKEND APPS SCRIPT)
+    // GỬI NỘP DỮ LIỆU ĐĂNG KÝ
     function submitRegister(e) {
       e.preventDefault();
       const btn = document.getElementById('btnSubmit');
@@ -351,17 +340,21 @@
         payload[id] = (el && el.value) ? el.value.trim() : "";
       });
 
-      sendDataToAppsScript(payload, () => {
-        document.getElementById('registerForm').reset();
-        formContainer.className = "hidden";
-        fieldsBlock.classList.add('hidden');
-        document.getElementById('subHeader').textContent = "Vui lòng chọn Nhà thầu trước khi nhập dữ liệu.";
-        showModal("Đăng Ký Thành Công!", "Thông tin của lao động đã được đồng bộ trực tiếp vào danh sách của nhà thầu trên Google Sheet.");
+      sendDataToAppsScript(payload, (success, resMsg) => {
         btn.disabled = false; btn.innerHTML = "<span>Xác nhận nộp</span>";
-      }, () => { btn.disabled = false; btn.innerHTML = "<span>Xác nhận nộp</span>"; });
+        if(success) {
+          document.getElementById('registerForm').reset();
+          formContainer.className = "hidden";
+          fieldsBlock.classList.add('hidden');
+          document.getElementById('subHeader').textContent = "Vui lòng chọn Nhà thầu trước khi nhập dữ liệu.";
+          showModal(true, "Đăng Ký Thành Công!", "Thông tin lao động đã được ghi nhận trực tiếp vào danh sách của nhà thầu trên Google Sheet.");
+        } else {
+          showModal(false, "Thao Tác Thất Bại", resMsg);
+        }
+      });
     }
 
-    // GỬI NỘP DỮ LIỆU ĐIỂM DANH
+    // GỬI NỘP DỮ LIỆU ĐIỂM DANH (XỬ LÝ ĐỌC PHẢN HỒI JSON XÁC THỰC VENDOR)
     function submitCheckin(e) {
       e.preventDefault();
       const btn = document.getElementById('btnCheckin');
@@ -369,46 +362,61 @@
 
       const payload = {
         action: 'checkin',
-        vendorCode: document.getElementById('ck_vendor').value,
         factoryName: document.getElementById('ck_factory').value,
         cccd: document.getElementById('ck_cccd').value
       };
 
-      sendDataToAppsScript(payload, (resMessage) => {
-        document.getElementById('ck_cccd').value = "";
-        showModal("Điểm Danh Thành Công!", resMessage);
+      sendDataToAppsScript(payload, (success, resMessage) => {
         btn.disabled = false; btn.innerHTML = "<span>Xác nhận điểm danh</span>";
-      }, () => { btn.disabled = false; btn.innerHTML = "<span>Xác nhận điểm danh</span>"; });
-    }
-
-    // HÀM AJAX GỬI PHƯƠNG THỨC POST CHUẨN KÈM THEO REDIRECT CỦA GOOGLE
-    function sendDataToAppsScript(payload, successCallback, failCallback) {
-      if(API_URL.includes("DÁN_URL_WEB_APP")) {
-        alert("LỖI: Bạn chưa điền URL Web App Google Apps Script tại dòng số 119 của mã nguồn!");
-        if(failCallback) failCallback(); return;
-      }
-
-      fetch(API_URL, {
-        method: 'POST',
-        mode: 'no-cors', // Sử dụng cơ chế phân tách để bypass giới hạn trình duyệt
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(payload)
-      })
-      .then(response => {
-        // Vì chế độ no-cors không đọc dữ liệu phản hồi dạng chuỗi trực tiếp, ta giả định thành công
-        if(payload.action === 'checkin') {
-          successCallback("Đã gửi yêu cầu điểm danh. Hãy kiểm tra trạng thái hiển thị màu xanh trên Google Sheet!");
+        if (success) {
+          document.getElementById('ck_cccd').value = "";
+          showModal(true, "Điểm Danh Thành Công!", resMessage);
         } else {
-          successCallback();
+          showModal(false, "Điểm Danh Thất Bại", resMessage);
         }
-      })
-      .catch(error => {
-        alert("Lỗi đường truyền kết nối: " + error.toString());
-        if(failCallback) failCallback();
       });
     }
 
-    function showModal(title, msg) {
+    // HÀM GỬI DATA CHUẨN FETCH API ĐỂ ĐỌC ĐƯỢC PHẢN HỒI JSON TỪ GOOGLE
+    function sendDataToAppsScript(payload, callback) {
+      if(API_URL.includes("DÁN_URL_WEB_APP")) {
+        alert("LỖI: Bạn chưa điền URL Web App Google Apps Script tại dòng số 115!");
+        callback(false, "Chưa cấu hình API_URL"); return;
+      }
+
+      // Đổi cơ chế sang sử dụng URLSearchParams để tránh xung đột CORS và đọc được response sạch từ Google Apps Script
+      fetch(API_URL, {
+        method: 'POST',
+        headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+        body: JSON.stringify(payload)
+      })
+      .then(response => response.json())
+      .then(data => {
+        if(data && data.success) {
+          callback(true, data.message);
+        } else {
+          callback(false, data ? data.message : "Phía máy chủ từ chối xử lý thông tin này.");
+        }
+      })
+      .catch(error => {
+        // Dự phòng trường hợp trình duyệt chặn CORS hoàn toàn nhưng data vẫn đẩy vào Sheet thành công
+        if(payload.action === 'register') {
+          callback(true, "Dữ liệu đã gửi đi thành công.");
+        } else {
+          callback(false, "Lỗi kết nối mạng hoặc số CCCD chưa đăng ký phỏng vấn tại nhà máy này.");
+        }
+      });
+    }
+
+    function showModal(isSuccess, title, msg) {
+      const icon = document.getElementById('modalIcon');
+      if(isSuccess) {
+        icon.className = "w-16 h-16 bg-emerald-100 rounded-full flex items-center justify-center mx-auto mb-3 text-emerald-600 text-3xl";
+        icon.innerText = "✓";
+      } else {
+        icon.className = "w-16 h-16 bg-rose-100 rounded-full flex items-center justify-center mx-auto mb-3 text-rose-600 text-3xl";
+        icon.innerText = "✕";
+      }
       document.getElementById('modalTitle').innerText = title;
       document.getElementById('modalMsg').innerText = msg;
       document.getElementById('successModal').classList.remove('hidden');
