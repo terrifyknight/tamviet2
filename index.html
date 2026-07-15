@@ -7,7 +7,10 @@
   <script src="https://cdn.tailwindcss.com"></script>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
   <script src="https://unpkg.com/html5-qrcode" type="text/javascript"></script>
-  <style>body { font-family: 'Inter', sans-serif; } .custom-field { display: none; }</style>
+  <style>
+    body { font-family: 'Inter', sans-serif; } 
+    .custom-field { display: none; }
+  </style>
 </head>
 <body class="min-h-screen bg-slate-100 p-2 sm:p-4 flex flex-col items-center justify-start">
 
@@ -103,7 +106,6 @@
           <div id="div_phone" class="custom-field"><label class="block text-sm font-semibold text-slate-800 mb-1.5" for="phone">Mobile *</label><input type="tel" id="phone" pattern="[0-9]{10}" class="w-full px-4 py-2.5 rounded-xl border border-slate-300"></div>
           <div id="div_cccd" class="custom-field"><label class="block text-sm font-semibold text-slate-800 mb-1.5" for="cccd">CCCD *</label><input type="text" id="cccd" pattern="[0-9]{12}" class="w-full px-4 py-2.5 rounded-xl border border-slate-300"></div>
           
-          <!-- Đã chuyển sang dạng TextBox tự do cho Ngày cấp và Ngày hết hạn -->
           <div id="div_cccdDate" class="custom-field"><label class="block text-sm font-semibold text-slate-800 mb-1.5" for="cccdDate">Ngày cấp CCCD *</label><input type="text" id="cccdDate" placeholder="Ví dụ: 25/12/2023" class="w-full px-4 py-2.5 rounded-xl border border-slate-300"></div>
           <div id="div_cccdExpiry" class="custom-field"><label class="block text-sm font-semibold text-slate-800 mb-1.5" for="cccdExpiry">Ngày hết hạn CCCD <span id="star_cccdExpiry">*</span></label><input type="text" id="cccdExpiry" placeholder="Ví dụ: 25/12/2038" class="w-full px-4 py-2.5 rounded-xl border border-slate-300"></div>
           
@@ -161,7 +163,8 @@
   </div>
 
   <script>
-    const API_URL = "https://script.google.com/macros/s/AKfycbzXitNfOluqkv5HGCJh9ADHDquZiXGi0xVKKYZBdE4mONGawki4dlbyWE4ZhJdpn-bZ/exec"; 
+    // URL Backend API liên kết tới Google Apps Script của bạn
+    const API_URL = "https://script.google.com/macros/s/AKfycbzxOr6hX0_XCaX9JLB7ZJXoSzsxL6IozJ-hwv7xW3Pk0_UOGi5p9Rrr6WBKfGmaJA-h/exec; 
 
     let currentMode = 'register';
     let html5QrCode = null;
@@ -269,7 +272,7 @@
       if (!isCamOpen) {
         container.style.maxHeight = "400px";
         tip.className = "text-[11px] text-indigo-300 mt-2 text-center leading-relaxed px-2";
-        tip.innerHTML = "Đưa mã QR ở góc phải thẻ CCCD vào khung quét";
+        tip.innerHTML = "Đưa mã QR ở góc right thẻ CCCD vào khung quét";
         
         html5QrCode = new Html5Qrcode("qrReader");
         html5QrCode.start(
@@ -318,8 +321,6 @@
           }
           if(parts[5]) document.getElementById('fullAddress').value = parts[5].trim();
           
-          // Khi tự động quét thành công: bóc tách định dạng DDMMYYYY gốc của QR 
-          // và tự điền dạng chuỗi text DD/MM/YYYY thân thiện cho người dùng kiểm tra lại
           if(parts[6] && parts[6].length === 8) {
             const yyyy = parts[6].substring(4, 8); const mm = parts[6].substring(2, 4); const dd = parts[6].substring(0, 2);
             document.getElementById('cccdDate').value = dd + "/" + mm + "/" + yyyy;
@@ -336,19 +337,100 @@
       }
     }
 
+    // LOGIC PHÂN RÃ NGÀY THÁNG NĂM TỪ Ô DATE HOẶC TEXTBOX
+    function splitDateString(dateStr, format) {
+      let day = "", month = "", year = "";
+      if (!dateStr) return { day, month, year };
+
+      if (format === 'yyyy-mm-dd') { // Định dạng chuẩn của <input type="date">
+        const parts = dateStr.split('-');
+        if (parts.length === 3) {
+          year = parts[0];
+          month = parts[1];
+          day = parts[2];
+        }
+      } else if (format === 'dd/mm/yyyy') { // Định dạng text (Ví dụ: "25/12/2023")
+        const parts = dateStr.replace(/-/g, '/').split('/');
+        if (parts.length === 3) {
+          day = parts[0].padStart(2, '0');
+          month = parts[1].padStart(2, '0');
+          year = parts[2];
+        }
+      }
+      return { day, month, year };
+    }
+
+    // LOGIC PHÂN RÃ ĐỊA CHỈ (XÃ, HUYỆN, TỈNH) TỪ ĐỊA CHỈ TRỌN VẸN
+    function splitAddressString(fullAddress) {
+      let commune = "", district = "", province = "";
+      if (!fullAddress) return { commune, district, province };
+
+      const parts = fullAddress.split(',').map(item => item.trim());
+      
+      // Quy chuẩn lấy ngược từ phải sang trái để tăng độ chính xác
+      if (parts.length >= 1) {
+        province = parts[parts.length - 1]; // Tỉnh/Thành phố ở cuối
+      }
+      if (parts.length >= 2) {
+        district = parts[parts.length - 2]; // Quận/Huyện liền kề trước Tỉnh
+      }
+      if (parts.length >= 3) {
+        // Gộp tất cả phần còn lại ở phía trước để làm Xã/Phường/Thôn xóm chi tiết
+        commune = parts.slice(0, parts.length - 2).join(', ');
+      } else if (parts.length === 2) {
+        commune = parts[0];
+      }
+      
+      return { commune, district, province };
+    }
+
     function submitRegister(e) {
       e.preventDefault();
       const btn = document.getElementById('btnSubmit');
       btn.disabled = true; btn.innerHTML = "Đang xử lý...";
 
       const genderRadio = document.querySelector('input[name="gender"]:checked');
-      const payload = { action: 'register', vendorCode: vendorSelect.value, factoryName: factorySelect.value, gender: genderRadio ? genderRadio.value : "" };
+      
+      // Tạo gói payload dữ liệu thô
+      const payload = { 
+        action: 'register', 
+        vendorCode: vendorSelect.value, 
+        factoryName: factorySelect.value, 
+        gender: genderRadio ? genderRadio.value : "" 
+      };
       
       allFieldIds.forEach(id => {
         var el = document.getElementById(id);
         payload[id] = (el && el.value) ? el.value.trim() : "";
       });
 
+      // TỰ ĐỘNG BÓC TÁCH DỮ LIỆU GỬI VỀ CHO APPS SCRIPT ĐIỀN CHÍNH XÁC VÀO CỘT EXCEL FUSHAN
+      
+      // 1. Tách Ngày / Tháng / Năm Sinh
+      const dobSplit = splitDateString(payload.dob, 'yyyy-mm-dd');
+      payload.dob_day = dobSplit.day;
+      payload.dob_month = dobSplit.month;
+      payload.dob_year = dobSplit.year;
+
+      // 2. Tách Ngày / Tháng / Năm Cấp CCCD
+      const cccdDateSplit = splitDateString(payload.cccdDate, 'dd/mm/yyyy');
+      payload.cccd_day = cccdDateSplit.day;
+      payload.cccd_month = cccdDateSplit.month;
+      payload.cccd_year = cccdDateSplit.year;
+
+      // 3. Tách Ngày / Tháng / Năm Hết Hạn CCCD (nếu có nhập)
+      const cccdExpirySplit = splitDateString(payload.cccdExpiry, 'dd/mm/yyyy');
+      payload.cccd_expiry_day = cccdExpirySplit.day;
+      payload.cccd_expiry_month = cccdExpirySplit.month;
+      payload.cccd_expiry_year = cccdExpirySplit.year;
+
+      // 4. Phân rã địa chỉ thường trú (Thôn, Xã, Huyện, Tỉnh)
+      const addressSplit = splitAddressString(payload.fullAddress);
+      payload.address_province = addressSplit.province;
+      payload.address_district = addressSplit.district;
+      payload.address_commune = addressSplit.commune;
+
+      // Gửi gói dữ liệu đã phân tách hoàn hảo về phía Apps Script
       sendDataToAppsScript(payload, (success, resMsg) => {
         btn.disabled = false; btn.innerHTML = "<span>Xác nhận nộp</span>";
         if(success) {
@@ -356,7 +438,7 @@
           formContainer.className = "hidden";
           fieldsBlock.classList.add('hidden');
           document.getElementById('subHeader').textContent = "Vui lòng chọn Nhà thầu trước khi nhập dữ liệu.";
-          showModal(true, "Đăng Ký Thành Công!", "Hồ sơ của bạn đã được tiếp nhận tự động vào danh sách lưu trữ trên hệ thống.");
+          showModal(true, "Đăng Ký Thành Công!", "Hồ sơ của bạn đã được tiếp nhận tự động và được phân tách chính xác trên hệ thống dữ liệu.");
         } else {
           showModal(false, "Thao Tác Thất Bại", resMsg);
         }
@@ -421,6 +503,7 @@
       document.getElementById('modalMsg').innerText = msg;
       document.getElementById('successModal').classList.remove('hidden');
     }
+    
     function closeModal() { document.getElementById('successModal').classList.add('hidden'); }
   </script>
 </body>
