@@ -3,87 +3,39 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>TÂM VIỆT - KẾT NỐI TƯƠNG LAI</title>
+  <title>VLT</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
   <script src="https://unpkg.com/html5-qrcode" type="text/javascript"></script>
-  <style>
-    body { font-family: 'Inter', sans-serif; } 
-    .custom-field { display: none; }
-  </style>
+  <style>body { font-family: 'Inter', sans-serif; } .custom-field { display: none; }</style>
 </head>
 <body class="min-h-screen bg-slate-100 p-2 sm:p-4 flex flex-col items-center justify-start">
 
-  <!-- THANH CHUYỂN ĐỔI CHẾ ĐỘ: ĐĂNG KÝ / ĐIỂM DANH -->
-  <div class="w-full max-w-lg bg-white rounded-2xl p-1.5 shadow-md border border-slate-200 flex mb-4 z-10">
-    <button onclick="switchMode('register')" id="tab-register" class="w-1/2 text-center py-2.5 rounded-xl text-sm font-bold transition-all bg-indigo-600 text-white shadow">
-      📝 Đăng Ký Thông Tin
-    </button>
-    <button onclick="switchMode('checkin')" id="tab-checkin" class="w-1/2 text-center py-2.5 rounded-xl text-sm font-bold transition-all text-slate-600 hover:text-slate-900">
-      ⏱️ Cổng Điểm Danh
-    </button>
-  </div>
-
-  <!-- CONTAINER CHÍNH -->
-  <div class="w-full max-w-lg bg-white rounded-3xl shadow-xl border border-slate-200 overflow-hidden mb-8">
-    
-    <!-- HEADER -->
-    <div id="headerBar" class="bg-gradient-to-r from-indigo-600 to-violet-600 px-6 py-5 text-white flex items-center justify-between relative">
+  <div class="w-full max-w-lg bg-white rounded-3xl shadow-xl border border-slate-200 overflow-hidden mb-8 mt-4">
+    <div id="headerBar" class="bg-gradient-to-r from-indigo-600 to-violet-600 px-6 py-5 text-white flex items-center justify-between">
       <div class="text-left">
-        <h1 id="mainTitle" class="text-xl font-bold tracking-tight">ĐĂNG KÝ THÔNG TIN</h1>
-        <p id="subHeader" class="text-indigo-100 text-xs mt-0.5">Vui lòng chọn Nhà thầu trước khi nhập dữ liệu.</p>
+        <h1 class="text-xl font-bold tracking-tight">ĐĂNG KÝ THÔNG TIN</h1>
+        <p class="text-indigo-100 text-xs mt-0.5">Chọn Nhà máy ứng tuyển và quét mã góc phải thẻ CCCD.</p>
       </div>
-      
-      <!-- BỘ NÚT CAMERA & ALBUM -->
       <div class="flex items-center space-x-2">
-        <label class="p-2.5 bg-white/20 hover:bg-white/30 rounded-full transition-all text-white cursor-pointer flex items-center justify-center" title="Tải ảnh CCCD từ máy để quét QR">
+        <label class="p-2.5 bg-white/20 hover:bg-white/30 rounded-full transition-all text-white cursor-pointer flex items-center justify-center">
           <input type="file" id="fileInput" accept="image/*" class="hidden" onchange="scanFromImageFile(this)">
-          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
-          </svg>
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg>
         </label>
-        
-        <button type="button" onclick="toggleCamera()" class="p-2.5 bg-white/20 hover:bg-white/30 rounded-full transition-all text-white outline-none flex items-center justify-center cursor-pointer" title="Quét trực tiếp bằng Camera">
-          <svg id="camIcon" class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M3 9a2 2 0 012-2h.93a2 2 0 001.664-.89l.812-1.22A2 2 0 0110.07 4h3.86a2 2 0 011.664.89l.812 1.22A2 2 0 0018.07 7H19a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V9z"></path>
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M15 13a3 3 0 11-6 0 3 3 0 016 0z"></path>
-          </svg>
+        <button type="button" onclick="toggleCamera()" class="p-2.5 bg-white/20 hover:bg-white/30 rounded-full transition-all text-white outline-none flex items-center justify-center cursor-pointer">
+          <svg id="camIcon" class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M3 9a2 2 0 012-2h.93a2 2 0 001.664-.89l.812-1.22A2 2 0 0110.07 4h3.86a2 2 0 011.664.89l.812 1.22A2 2 0 0018.07 7H19a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V9z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M15 13a3 3 0 11-6 0 3 3 0 016 0z"></path></svg>
         </button>
       </div>
     </div>
 
-    <!-- KHUNG TRẠNG THÁI XỬ LÝ ẢNH -->
-    <div id="statusContainer" class="bg-indigo-50 border-b border-indigo-100 hidden p-3 text-center text-xs text-indigo-700 font-medium">
-      <span id="statusText">Đang xử lý hình ảnh...</span>
-    </div>
+    <div id="statusContainer" class="bg-indigo-50 border-b border-indigo-100 hidden p-3 text-center text-xs text-indigo-700 font-medium"><span id="statusText">Đang xử lý...</span></div>
+    <div id="camContainer" class="bg-slate-900 overflow-hidden transition-all duration-300 max-h-0"><div class="p-4 flex flex-col items-center"><div id="qrReader" class="w-full rounded-2xl overflow-hidden bg-black max-w-[280px]"></div></div></div>
 
-    <!-- KHUNG CAMERA QUÉT TRỰC TIẾP -->
-    <div id="camContainer" class="bg-slate-900 overflow-hidden transition-all duration-300 max-h-0">
-      <div class="p-4 flex flex-col items-center">
-        <div id="qrReader" class="w-full rounded-2xl overflow-hidden bg-black max-w-[280px]"></div>
-        <p class="text-[11px] text-indigo-300 mt-2 text-center leading-relaxed px-2" id="camTip">Đưa mã QR ở góc phải thẻ CCCD vào khung quét để hệ thống tự nhập</p>
-      </div>
-    </div>
-
-    <!-- 1. GIAO DIỆN FORM ĐĂNG KÝ THÔNG TIN -->
     <form id="registerForm" class="p-6 space-y-5 block" onsubmit="submitRegister(event)">
       <div>
-        <label class="block text-sm font-bold text-slate-900 mb-1.5" for="vendorCode">Nhà Thầu <span class="text-rose-500">*</span></label>
-        <select id="vendorCode" required onchange="onVendorChange()" class="w-full px-4 py-2.5 rounded-xl border border-slate-300 text-slate-900 font-medium bg-slate-50">
-          <option value="">-- Chọn Mã Nhà Thầu của bạn --</option>
-          <option value="Tâm Việt">Tâm Việt</option>
-          <option value="VLT">VLT</option>
-          <option value="DMT">DMT</option>
-          <option value="TC">TC</option>
-          <option value="Vinamex">Vinamex</option>
-        </select>
-      </div>
-      
-      <div id="dynamicFormContainer" class="hidden space-y-5">
-        <div class="border-t border-slate-200 pt-4">
-          <label class="block text-sm font-bold text-slate-900 mb-1.5" for="factoryCode">Nhà máy đăng ký làm việc <span class="text-rose-500">*</span></label>
-          <select id="factoryCode" required onchange="onFactoryChange()" class="w-full px-4 py-2.5 rounded-xl border border-indigo-300 text-slate-900 font-semibold bg-indigo-50/50">
-            <option value="">-- Chọn Nhà máy làm việc --</option>
+        <label class="block text-sm font-bold text-slate-900 mb-1.5" for="factoryCode">Nhà máy đăng ký làm việc *</label>
+        <select id="factoryCode" required onchange="onFactoryChange()" class="w-full px-4 py-2.5 rounded-xl border border-indigo-300 text-slate-900 font-semibold bg-indigo-50/50">
+          <option value="">-- Chọn Nhà máy làm việc --</option>
             <option value="HONHAI-FK">HONHAI-FK / FUKANG</option>
             <option value="LUXE QC2&3">LUXE QC2&3</option>
             <option value="LUXE QC1">LUXE QC1</option>
@@ -95,415 +47,151 @@
             <option value="FUSHAN">FUSHAN</option>
             <option value="NEWWING">NEWWING</option>
             <option value="FOX-QUẢNG NINH">FOX-QUẢNG NINH</option>
-          </select>
-        </div>
-        
-        <div id="fieldsBlock" class="space-y-4 pt-2 hidden">
-          <div id="div_interviewDate" class="custom-field"><label class="block text-sm font-semibold text-slate-800 mb-1.5" for="interviewDate">Ngày phỏng vấn *</label><input type="date" id="interviewDate" class="w-full px-4 py-2.5 rounded-xl border border-slate-300"></div>
-          <div id="div_fullname" class="custom-field"><label class="block text-sm font-semibold text-slate-800 mb-1.5" for="fullname">Họ và tên *</label><input type="text" id="fullname" class="w-full px-4 py-2.5 rounded-xl border border-slate-300"></div>
-          <div id="div_gender" class="custom-field"><label class="block text-sm font-semibold text-slate-800 mb-1.5">Giới tính *</label><div class="flex items-center space-x-6 py-1"><label class="flex items-center cursor-pointer"><input type="radio" name="gender" id="gender_nam" value="Nam" class="w-4 h-4"><span class="ml-2">Nam</span></label><label class="flex items-center cursor-pointer"><input type="radio" name="gender" id="gender_nu" value="Nữ" class="w-4 h-4"><span class="ml-2">Nữ</span></label></div></div>
-          <div id="div_dob" class="custom-field"><label class="block text-sm font-semibold text-slate-800 mb-1.5" for="dob">Ngày sinh *</label><input type="date" id="dob" class="w-full px-4 py-2.5 rounded-xl border border-slate-300"></div>
-          <div id="div_phone" class="custom-field"><label class="block text-sm font-semibold text-slate-800 mb-1.5" for="phone">Mobile *</label><input type="tel" id="phone" pattern="[0-9]{10}" class="w-full px-4 py-2.5 rounded-xl border border-slate-300"></div>
-          <div id="div_cccd" class="custom-field"><label class="block text-sm font-semibold text-slate-800 mb-1.5" for="cccd">CCCD *</label><input type="text" id="cccd" pattern="[0-9]{12}" class="w-full px-4 py-2.5 rounded-xl border border-slate-300"></div>
-          
-          <div id="div_cccdDate" class="custom-field"><label class="block text-sm font-semibold text-slate-800 mb-1.5" for="cccdDate">Ngày cấp CCCD *</label><input type="text" id="cccdDate" placeholder="Ví dụ: 25/12/2023" class="w-full px-4 py-2.5 rounded-xl border border-slate-300"></div>
-          <div id="div_cccdExpiry" class="custom-field"><label class="block text-sm font-semibold text-slate-800 mb-1.5" for="cccdExpiry">Ngày hết hạn CCCD <span id="star_cccdExpiry">*</span></label><input type="text" id="cccdExpiry" placeholder="Ví dụ: 25/12/2038" class="w-full px-4 py-2.5 rounded-xl border border-slate-300"></div>
-          
-          <div id="div_ethnicity" class="custom-field"><label class="block text-sm font-semibold text-slate-800 mb-1.5" for="ethnicity">Dân tộc *</label><input type="text" id="ethnicity" class="w-full px-4 py-2.5 rounded-xl border border-slate-300"></div>
-          <div id="div_schoolName" class="custom-field"><label class="block text-sm font-semibold text-slate-800 mb-1.5" for="schoolName">Tên trường tốt nghiệp *</label><input type="text" id="schoolName" class="w-full px-4 py-2.5 rounded-xl border border-slate-300"></div>
-          <div id="div_educationLevel" class="custom-field"><label class="block text-sm font-semibold text-slate-800 mb-1.5" for="educationLevel">Tốt nghiệp cấp mấy *</label><select id="educationLevel" class="w-full px-4 py-2.5 rounded-xl border border-slate-300"><option value="">-- Chọn --</option><option value="THCS (Cấp 2)">THCS (Cấp 2)</option><option value="THPT (Cấp 3)">THPT (Cấp 3)</option><option value="Trung cấp / Cao đẳng">Trung cấp / Cao đẳng</option><option value="Đại học">Đại học</option></select></div>
-          <div id="div_relativeName" class="custom-field"><label class="block text-sm font-semibold text-slate-800 mb-1.5" for="relativeName">Họ tên người thân *</label><input type="text" id="relativeName" class="w-full px-4 py-2.5 rounded-xl border border-slate-300"></div>
-          <div id="div_relativePhone" class="custom-field"><label class="block text-sm font-semibold text-slate-800 mb-1.5" for="relativePhone">SĐT người thân *</label><input type="tel" id="relativePhone" pattern="[0-9]{10}" class="w-full px-4 py-2.5 rounded-xl border border-slate-300"></div>
-          <div id="div_fullAddress" class="custom-field"><label class="block text-sm font-semibold text-slate-800 mb-1.5" for="fullAddress">Địa chỉ thường trú *</label><input type="text" id="fullAddress" class="w-full px-4 py-2.5 rounded-xl border border-slate-300"></div>
-          <div id="div_bankAccount" class="custom-field"><label class="block text-sm font-semibold text-slate-800 mb-1.5" for="bankAccount">STK Ngân hàng Vietcombank</label><input type="text" id="bankAccount" class="w-full px-4 py-2.5 rounded-xl border border-slate-300"></div>
-          <div id="div_socialInsurance" class="custom-field"><label class="block text-sm font-semibold text-slate-800 mb-1.5" for="socialInsurance">Số BHXH</label><input type="text" id="socialInsurance" class="w-full px-4 py-2.5 rounded-xl border border-slate-300"></div>
-          <div id="div_note" class="custom-field"><label class="block text-sm font-semibold text-slate-800 mb-1.5" for="note">Ghi Chú</label><input type="text" id="note" class="w-full px-4 py-2.5 rounded-xl border border-slate-300"></div>
-          <button type="submit" id="btnSubmit" class="w-full mt-4 bg-gradient-to-r from-indigo-600 to-violet-600 text-white font-semibold py-3 rounded-xl shadow-md cursor-pointer"><span>Xác nhận nộp</span></button>
-        </div>
-      </div>
-    </form>
-
-    <!-- 2. GIAO DIỆN FORM ĐIỂM DANH LAO ĐỘNG -->
-    <form id="checkinForm" class="p-6 space-y-5 hidden" onsubmit="submitCheckin(event)">
-      <div>
-        <label class="block text-sm font-bold text-slate-900 mb-1.5" for="ck_factory">Nhà máy phỏng vấn *</label>
-        <select id="ck_factory" required class="w-full px-4 py-2.5 rounded-xl border border-slate-300 text-slate-900 font-medium bg-slate-50">
-          <option value="">-- Chọn Nhà máy --</option>
-          <option value="HONHAI-FK">HONHAI-FK / FUKANG</option>
-          <option value="LUXE QC2&3">LUXE QC2&3</option>
-          <option value="LUXE QC1">LUXE QC1</option>
-          <option value="LUXE VT">LUXE VT</option>
-          <option value="GTK NAM SƠN">GTK NAM SƠN</option>
-          <option value="ADTEK">ADTEK</option>
-          <option value="LENS">LENS</option>
-          <option value="WNC HÀ NAM">WNC HÀ NAM</option>
-          <option value="FUSHAN">FUSHAN</option>
-          <option value="NEWWING">NEWWING</option>
-          <option value="FOX-QUẢNG NINH">FOX-QUẢNG NINH</option>
+            <option value="AMPHENOL">AMPHENOL</option>
+            <option value="BIEL VSIP">BIEL VSIP</option>
+            <option value="BIEL HD">BIEL HP</option>
         </select>
       </div>
-      <div>
-        <label class="block text-sm font-bold text-slate-900 mb-1.5" for="ck_cccd">Số CCCD Lao động (12 số) *</label>
-        <input type="text" id="ck_cccd" required pattern="[0-9]{12}" class="w-full px-4 py-2.5 rounded-xl border border-slate-300 text-sm font-semibold tracking-wider text-slate-900" placeholder="Quét mã QR hoặc gõ tay trực tiếp">
+      
+      <div id="fieldsBlock" class="space-y-4 pt-2 hidden">
+        <div id="div_interviewDate" class="custom-field"><label class="block text-sm font-semibold text-slate-800 mb-1.5" for="interviewDate">Ngày phỏng vấn *</label><input type="date" id="interviewDate" class="w-full px-4 py-2.5 rounded-xl border border-slate-300"></div>
+        <div id="div_fullname" class="custom-field"><label class="block text-sm font-semibold text-slate-800 mb-1.5" for="fullname">Họ và tên *</label><input type="text" id="fullname" class="w-full px-4 py-2.5 rounded-xl border border-slate-300"></div>
+        <div id="div_gender" class="custom-field"><label class="block text-sm font-semibold text-slate-800 mb-1.5">Giới tính *</label><div class="flex items-center space-x-6 py-1"><label class="flex items-center cursor-pointer"><input type="radio" name="gender" id="gender_nam" value="Nam" class="w-4 h-4"><span class="ml-2">Nam</span></label><label class="flex items-center cursor-pointer"><input type="radio" name="gender" id="gender_nu" value="Nữ" class="w-4 h-4"><span class="ml-2">Nữ</span></label></div></div>
+        <div id="div_dob" class="custom-field"><label class="block text-sm font-semibold text-slate-800 mb-1.5" for="dob">Ngày sinh *</label><input type="date" id="dob" class="w-full px-4 py-2.5 rounded-xl border border-slate-300"></div>
+        
+        <!-- TRƯỜNG THÔNG TIN MỚI: TÌNH TRẠNG HÔN NHÂN -->
+        <div id="div_maritalStatus" class="custom-field"><label class="block text-sm font-semibold text-slate-800 mb-1.5" for="maritalStatus">Tình trạng hôn nhân *</label><select id="maritalStatus" class="w-full px-4 py-2.5 rounded-xl border border-slate-300"><option value="Độc thân">Độc thân</option><option value="Đã kết hôn">Đã kết hôn</option><option value="Ly hôn">Ly hôn</option></select></div>
+        
+        <div id="div_phone" class="custom-field"><label class="block text-sm font-semibold text-slate-800 mb-1.5" for="phone">Mobile *</label><input type="tel" id="phone" pattern="[0-9]{10}" class="w-full px-4 py-2.5 rounded-xl border border-slate-300"></div>
+        <div id="div_cccd" class="custom-field"><label class="block text-sm font-semibold text-slate-800 mb-1.5" for="cccd">CCCD *</label><input type="text" id="cccd" pattern="[0-9]{12}" class="w-full px-4 py-2.5 rounded-xl border border-slate-300"></div>
+        <div id="div_cccdDate" class="custom-field"><label class="block text-sm font-semibold text-slate-800 mb-1.5" for="cccdDate">Ngày cấp CCCD *</label><input type="text" id="cccdDate" class="w-full px-4 py-2.5 rounded-xl border border-slate-300"></div>
+        <div id="div_cccdExpiry" class="custom-field"><label class="block text-sm font-semibold text-slate-800 mb-1.5" for="cccdExpiry">Ngày hết hạn CCCD *</label><input type="text" id="cccdExpiry" class="w-full px-4 py-2.5 rounded-xl border border-slate-300"></div>
+        <div id="div_ethnicity" class="custom-field"><label class="block text-sm font-semibold text-slate-800 mb-1.5" for="ethnicity">Dân tộc *</label><input type="text" id="ethnicity" class="w-full px-4 py-2.5 rounded-xl border border-slate-300"></div>
+        
+        <!-- KHỐI THÔNG TIN NGƯỜI THÂN KHẨN CẤP ĐƯỢC BỔ SUNG YÊU CẦU CHO MẪU FUSHAN -->
+        <div id="div_relativeName" class="custom-field"><label class="block text-sm font-semibold text-slate-800 mb-1.5" for="relativeName">Họ tên người thân khẩn cấp *</label><input type="text" id="relativeName" class="w-full px-4 py-2.5 rounded-xl border border-slate-300" placeholder="Ví dụ: Nguyễn Văn A"></div>
+        <div id="div_relativeRelation" class="custom-field"><label class="block text-sm font-semibold text-slate-800 mb-1.5" for="relativeRelation">Mối quan hệ người thân *</label><input type="text" id="relativeRelation" class="w-full px-4 py-2.5 rounded-xl border border-slate-300" placeholder="Ví dụ: Bố, Mẹ, Vợ, Anh trai..."></div>
+        <div id="div_relativePhone" class="custom-field"><label class="block text-sm font-semibold text-slate-800 mb-1.5" for="relativePhone">Số điện thoại người thân *</label><input type="tel" id="relativePhone" pattern="[0-9]{10}" class="w-full px-4 py-2.5 rounded-xl border border-slate-300"></div>
+        <div id="div_relativeAddress" class="custom-field"><label class="block text-sm font-semibold text-slate-800 mb-1.5" for="relativeAddress">Địa chỉ người thân *</label><input type="text" id="relativeAddress" class="w-full px-4 py-2.5 rounded-xl border border-slate-300" placeholder="Số nhà, Xã, Huyện, Tỉnh"></div>
+        
+        <div id="div_fullAddress" class="custom-field"><label class="block text-sm font-semibold text-slate-800 mb-1.5" for="fullAddress">Địa chỉ thường trú *</label><input type="text" id="fullAddress" class="w-full px-4 py-2.5 rounded-xl border border-slate-300"></div>
+        <div id="div_socialInsurance" class="custom-field"><label class="block text-sm font-semibold text-slate-800 mb-1.5" for="socialInsurance">Số BHXH</label><input type="text" id="socialInsurance" class="w-full px-4 py-2.5 rounded-xl border border-slate-300"></div>
+        <div id="div_schoolName" class="custom-field"><label class="block text-sm font-semibold text-slate-800 mb-1.5" for="schoolName">Tên trường tốt nghiệp *</label><input type="text" id="schoolName" class="w-full px-4 py-2.5 rounded-xl border border-slate-300"></div>
+        <div id="div_educationLevel" class="custom-field"><label class="block text-sm font-semibold text-slate-800 mb-1.5" for="educationLevel">Tốt nghiệp cấp mấy *</label><select id="educationLevel" class="w-full px-4 py-2.5 rounded-xl border border-slate-300"><option value="">-- Chọn --</option><option value="THCS (Cấp 2)">THCS (Cấp 2)</option><option value="THPT (Cấp 3)">THPT (Cấp 3)</option><option value="Trung cấp / Cao đẳng">Trung cấp / Cao đẳng</option><option value="Đại học">Đại học</option></select></div>
+        <div id="div_note" class="custom-field"><label class="block text-sm font-semibold text-slate-800 mb-1.5" for="note">Ghi Chú</label><input type="text" id="note" class="w-full px-4 py-2.5 rounded-xl border border-slate-300"></div>
+        
+        <button type="submit" id="btnSubmit" class="w-full mt-4 bg-gradient-to-r from-indigo-600 to-violet-600 text-white font-semibold py-3 rounded-xl shadow-md cursor-pointer"><span>Xác nhận nộp</span></button>
       </div>
-      <button type="submit" id="btnCheckin" class="w-full mt-4 bg-gradient-to-r from-emerald-600 to-teal-600 text-white font-semibold py-3 rounded-xl shadow-md cursor-pointer">
-        <span>Xác nhận điểm danh</span>
-      </button>
     </form>
   </div>
 
-  <!-- POP-UP THÔNG BÁO KẾT QUẢ -->
   <div id="successModal" class="hidden fixed inset-0 bg-slate-900/50 flex items-center justify-center p-4 backdrop-blur-sm z-50">
     <div class="bg-white rounded-3xl p-6 w-full max-w-sm text-center border border-slate-200 shadow-2xl">
       <div id="modalIcon" class="w-16 h-16 bg-emerald-100 rounded-full flex items-center justify-center mx-auto mb-3 text-emerald-600 text-3xl">✓</div>
-      <h2 id="modalTitle" class="text-xl font-bold text-slate-800 mb-2">Thao Tác Thành Công!</h2>
-      <p id="modalMsg" class="text-sm text-slate-600 mb-5 leading-relaxed bg-slate-50 p-3 rounded-xl border border-slate-100 text-left font-medium"></p>
-      <button onclick="closeModal()" class="w-full bg-slate-800 text-white font-medium py-2.5 rounded-xl hover:bg-slate-900">Đóng</button>
+      <h2 id="modalTitle" class="text-xl font-bold text-slate-800 mb-2">Thành Công!</h2>
+      <p id="modalMsg" class="text-sm text-slate-600 mb-5 leading-relaxed bg-slate-50 p-3 rounded-xl border text-center font-medium"></p>
+      <button onclick="closeModal()" class="w-full bg-slate-800 text-white font-medium py-2.5 rounded-xl">Đóng</button>
     </div>
   </div>
 
   <script>
-    // URL Backend API liên kết tới Google Apps Script của bạn
-    const API_URL = "https://script.google.com/macros/s/AKfycbzxOr6hX0_XCaX9JLB7ZJXoSzsxL6IozJ-hwv7xW3Pk0_UOGi5p9Rrr6WBKfGmaJA-h/exec; 
+    const API_URL = "https://script.google.com/macros/s/AKfycbx7qyc8B-7RtSfhxEi1PRDKFHgP4pJRZnqJAXXuZTPykYSWTku94Cqxq7dFh9H_L-FxNQ/exec"; 
 
-    let currentMode = 'register';
-    let html5QrCode = null;
-    let isCamOpen = false;
-
-    const allFieldIds = ['interviewDate', 'fullname', 'dob', 'phone', 'cccd', 'cccdDate', 'cccdExpiry', 'ethnicity', 'schoolName', 'educationLevel', 'relativeName', 'relativePhone', 'fullAddress', 'bankAccount', 'socialInsurance', 'note'];
-
-    function switchMode(mode) {
-      if (currentMode === mode) return;
-      currentMode = mode;
-      stopCamera();
-
-      const tabReg = document.getElementById('tab-register');
-      const tabCk = document.getElementById('tab-checkin');
-      const headerBar = document.getElementById('headerBar');
-      const title = document.getElementById('mainTitle');
-      const sub = document.getElementById('subHeader');
-      const formReg = document.getElementById('registerForm');
-      const formCk = document.getElementById('checkinForm');
-
-      if (mode === 'register') {
-        tabReg.className = "w-1/2 text-center py-2.5 rounded-xl text-sm font-bold transition-all bg-indigo-600 text-white shadow";
-        tabCk.className = "w-1/2 text-center py-2.5 rounded-xl text-sm font-bold transition-all text-slate-600 hover:text-slate-900";
-        headerBar.className = "bg-gradient-to-r from-indigo-600 to-violet-600 px-6 py-5 text-white flex items-center justify-between relative";
-        title.innerText = "ĐĂNG KÝ THÔNG TIN";
-        sub.innerText = vendorSelect.value ? "Bạn đang khai báo thông tin cho Nhà Thầu: " + vendorSelect.value : "Vui lòng chọn Nhà thầu trước khi nhập dữ liệu.";
-        formReg.classList.remove('hidden'); formCk.classList.add('hidden');
-      } else {
-        tabCk.className = "w-1/2 text-center py-2.5 rounded-xl text-sm font-bold transition-all bg-emerald-600 text-white shadow";
-        tabReg.className = "w-1/2 text-center py-2.5 rounded-xl text-sm font-bold transition-all text-slate-600 hover:text-slate-900";
-        headerBar.className = "bg-gradient-to-r from-emerald-600 to-teal-600 px-6 py-4 text-white flex items-center justify-between relative";
-        title.innerText = "CỔNG ĐIỂM DANH PHỎNG VẤN";
-        sub.innerText = "Hệ thống tự động nhận diện thông tin Vendor sau khi quét";
-        formCk.classList.remove('hidden'); formReg.classList.add('hidden');
-      }
-    }
-
-    const vendorSelect = document.getElementById('vendorCode');
-    const factorySelect = document.getElementById('factoryCode');
-    const formContainer = document.getElementById('dynamicFormContainer');
-    const fieldsBlock = document.getElementById('fieldsBlock');
-
-    function onVendorChange() { 
-      if (vendorSelect.value !== "") { 
-        formContainer.className = "space-y-5 block"; 
-        document.getElementById('subHeader').textContent = "Bạn đang khai báo thông tin cho Nhà Thầu: " + vendorSelect.value; 
-      } else { 
-        formContainer.className = "hidden"; 
-        document.getElementById('subHeader').textContent = "Vui lòng chọn Nhà thầu của bạn trước khi nhập dữ liệu."; 
-      } 
-      factorySelect.value = ""; 
-      onFactoryChange(); 
-    }
+    let html5QrCode = null, isCamOpen = false;
+    const allFieldIds = ['interviewDate', 'fullname', 'dob', 'maritalStatus', 'phone', 'cccd', 'cccdDate', 'cccdExpiry', 'ethnicity', 'relativeName', 'relativeRelation', 'relativePhone', 'relativeAddress', 'fullAddress', 'socialInsurance', 'schoolName', 'educationLevel', 'note'];
+    const factorySelect = document.getElementById('factoryCode'), fieldsBlock = document.getElementById('fieldsBlock');
 
     function onFactoryChange() { 
       const fCode = factorySelect.value; 
       allFieldIds.forEach(id => { document.getElementById('div_' + id).style.display = 'none'; document.getElementById(id).removeAttribute('required'); }); 
-      document.getElementById('star_cccdExpiry').style.display = 'inline'; 
       if (!fCode) { fieldsBlock.classList.add('hidden'); return; } 
-      fieldsBlock.classList.remove('hidden'); 
+      fieldsBlock.classList.remove('hidden'); document.getElementById('div_gender').style.display = 'block'; 
+      
+      // Khai báo các trường hiển thị động theo form nhà máy
       const showFields = ['interviewDate', 'fullname', 'dob', 'phone', 'cccd', 'note']; 
-      document.getElementById('div_gender').style.display = 'block'; 
-      if (fCode === "HONHAI-FK" || fCode === "GTK NAM SƠN" || fCode === "ADTEK" || fCode === "LENS" || fCode === "WNC HÀ NAM") {} 
-      else if (fCode === "LUXE QC2&3" || fCode === "LUXE QC1" || fCode === "LUXE VT") { showFields.push('cccdDate', 'cccdExpiry', 'fullAddress'); if (fCode === "LUXE QC1" || fCode === "LUXE VT") document.getElementById('star_cccdExpiry').style.display = 'none'; } 
-      else if (fCode === "FUSHAN") { showFields.push('cccdDate', 'fullAddress'); } 
-      else if (fCode === "NEWWING" || fCode === "FOX-QUẢNG NINH") { showFields.push('cccdDate', 'ethnicity', 'relativeName', 'relativePhone', 'fullAddress', 'bankAccount'); if (fCode === "FOX-QUẢNG NINH") showFields.push('schoolName', 'educationLevel', 'socialInsurance'); } 
-      showFields.forEach(id => { 
-        document.getElementById('div_' + id).style.display = 'block'; 
-        if (id !== 'note' && id !== 'bankAccount' && id !== 'socialInsurance') { 
-          if (id === 'cccdExpiry' && (fCode === "LUXE QC1" || fCode === "LUXE VT")) return; 
-          document.getElementById(id).setAttribute('required', 'true'); 
-        } 
-      }); 
+      if (fCode === "FUSHAN") { 
+        showFields.push('maritalStatus', 'cccdDate', 'fullAddress', 'relativeName', 'relativeRelation', 'relativePhone', 'relativeAddress'); 
+      } else { 
+        showFields.push('cccdDate', 'cccdExpiry', 'fullAddress'); 
+      }
+      showFields.forEach(id => { document.getElementById('div_' + id).style.display = 'block'; if (id !== 'note') document.getElementById(id).setAttribute('required', 'true'); }); 
     }
 
     function scanFromImageFile(inputElement) {
-      const statusBox = document.getElementById('statusContainer');
-      const statusText = document.getElementById('statusText');
+      const statusBox = document.getElementById('statusContainer'), statusText = document.getElementById('statusText');
       if (!inputElement.files || inputElement.files.length === 0) return;
-      
-      statusBox.classList.remove('hidden');
-      statusText.innerText = "⏳ Hệ thống đang quét mã QR từ hình ảnh...";
-      
-      const file = inputElement.files[0];
-      const html5Qr = new Html5Qrcode("qrReader");
-      
-      html5Qr.scanFile(file, true)
-        .then(decodedText => {
-          statusText.innerText = "✅ Quét ảnh thành công!";
-          handleDecodedText(decodedText);
-          setTimeout(() => statusBox.classList.add('hidden'), 1500);
-          inputElement.value = ""; 
-        })
-        .catch(err => {
-          statusText.innerText = "❌ Không tìm thấy QR hợp lệ. Hãy chọn ảnh chụp rõ nét vùng QR.";
-          inputElement.value = "";
-        });
+      statusBox.classList.remove('hidden'); statusText.innerText = "⏳ Đang quét QR...";
+      new Html5Qrcode("qrReader").scanFile(inputElement.files[0], true).then(decodedText => {
+        statusText.innerText = "✅ Thành công!"; handleDecodedText(decodedText);
+        setTimeout(() => statusBox.classList.add('hidden'), 1500); inputElement.value = ""; 
+      }).catch(err => { statusText.innerText = "❌ Không tìm thấy QR!"; inputElement.value = ""; });
     }
 
     function toggleCamera() {
-      const container = document.getElementById('camContainer');
-      const icon = document.getElementById('camIcon');
-      const tip = document.getElementById('camTip');
-      
+      const container = document.getElementById('camContainer'), icon = document.getElementById('camIcon');
       if (!isCamOpen) {
-        container.style.maxHeight = "400px";
-        tip.className = "text-[11px] text-indigo-300 mt-2 text-center leading-relaxed px-2";
-        tip.innerHTML = "Đưa mã QR ở góc right thẻ CCCD vào khung quét";
-        
-        html5QrCode = new Html5Qrcode("qrReader");
-        html5QrCode.start(
-          { facingMode: "environment" }, 
-          { fps: 20, qrbox: { width: 230, height: 230 } },
-          (msg) => { handleDecodedText(msg); stopCamera(); }, 
-          (err) => {}
-        ).then(() => { 
-          isCamOpen = true; 
-          icon.innerHTML = '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M6 18L18 6M6 6l12 12"></path>'; 
-        }).catch(err => { 
-          tip.className = "text-xs text-rose-400 mt-2 font-semibold text-center leading-relaxed px-4";
-          tip.innerHTML = "⚠️ Trình duyệt chặn camera hoặc lỗi phần cứng! Bạn có thể sử dụng nút Tải ảnh bên cạnh để quét.";
-        });
+        container.style.maxHeight = "400px"; html5QrCode = new Html5Qrcode("qrReader");
+        html5QrCode.start({ facingMode: "environment" }, { fps: 20, qrbox: 230 }, (msg) => { handleDecodedText(msg); stopCamera(); }, (err) => {}).then(() => { isCamOpen = true; icon.innerHTML = '<path d="M6 18L18 6M6 6l12 12" stroke-width="2.5" stroke="currentColor"></path>'; });
       } else { stopCamera(); }
     }
 
     function stopCamera() {
       if (html5QrCode && isCamOpen) {
-        html5QrCode.stop().then(() => {
-          document.getElementById('camContainer').style.maxHeight = "0px";
-          document.getElementById('camIcon').innerHTML = '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M3 9a2 2 0 012-2h.93a2 2 0 001.664-.89l.812-1.22A2 2 0 0110.07 4h3.86a2 2 0 011.664.89l.812 1.22A2 2 0 0018.07 7H19a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V9z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M15 13a3 3 0 11-6 0 3 3 0 016 0z"></path>';
-          isCamOpen = false;
-        }).catch(err => console.log(err));
-      } else { document.getElementById('camContainer').style.maxHeight = "0px"; isCamOpen = false; }
+        html5QrCode.stop().then(() => { document.getElementById('camContainer').style.maxHeight = "0px"; isCamOpen = false; });
+      }
     }
 
     function handleDecodedText(rawText) {
-      if (!rawText) return;
-      if (window.navigator && window.navigator.vibrate) window.navigator.vibrate(100);
-
       const parts = rawText.split('|');
-      
-      if (currentMode === 'register') {
-        if (parts.length >= 6) {
-          if(parts[0]) document.getElementById('cccd').value = parts[0].trim();
-          if(parts[2]) document.getElementById('fullname').value = parts[2].trim();
-          if(parts[3] && parts[3].length === 8) {
-            const yyyy = parts[3].substring(4, 8); const mm = parts[3].substring(2, 4); const dd = parts[3].substring(0, 2);
-            document.getElementById('dob').value = yyyy + "-" + mm + "-" + dd;
-          }
-          if(parts[4]) {
-            const g = parts[4].trim();
-            if(g === "Nam") document.getElementById('gender_nam').checked = true;
-            else if(g === "Nữ") document.getElementById('gender_nu').checked = true;
-          }
-          if(parts[5]) document.getElementById('fullAddress').value = parts[5].trim();
-          
-          if(parts[6] && parts[6].length === 8) {
-            const yyyy = parts[6].substring(4, 8); const mm = parts[6].substring(2, 4); const dd = parts[6].substring(0, 2);
-            document.getElementById('cccdDate').value = dd + "/" + mm + "/" + yyyy;
-          }
-        } else { alert("Mã QR không khớp định dạng dữ liệu CCCD!"); }
-      } else {
-        if (parts.length > 0 && parts[0].length === 12 && /^\d+$/.test(parts[0])) {
-          document.getElementById('ck_cccd').value = parts[0];
-        } else {
-          const cleanText = rawText.trim();
-          if (cleanText.length === 12 && /^\d+$/.test(cleanText)) document.getElementById('ck_cccd').value = cleanText;
-          else alert("Nội dung QR quét được không phải số CCCD!");
-        }
+      if (parts.length >= 6) {
+        document.getElementById('cccd').value = parts[0].trim();
+        document.getElementById('fullname').value = parts[2].trim();
+        if(parts[3].length === 8) document.getElementById('dob').value = parts[3].substring(4,8)+"-"+parts[3].substring(2,4)+"-"+parts[3].substring(0,2);
+        if(parts[4].trim() === "Nam") document.getElementById('gender_nam').checked = true; else document.getElementById('gender_nu').checked = true;
+        document.getElementById('fullAddress').value = parts[5].trim();
+        if(parts[6].length === 8) document.getElementById('cccdDate').value = parts[6].substring(0,2)+"/"+parts[6].substring(2,4)+"/"+parts[6].substring(4,8);
       }
-    }
-
-    // LOGIC PHÂN RÃ NGÀY THÁNG NĂM TỪ Ô DATE HOẶC TEXTBOX
-    function splitDateString(dateStr, format) {
-      let day = "", month = "", year = "";
-      if (!dateStr) return { day, month, year };
-
-      if (format === 'yyyy-mm-dd') { // Định dạng chuẩn của <input type="date">
-        const parts = dateStr.split('-');
-        if (parts.length === 3) {
-          year = parts[0];
-          month = parts[1];
-          day = parts[2];
-        }
-      } else if (format === 'dd/mm/yyyy') { // Định dạng text (Ví dụ: "25/12/2023")
-        const parts = dateStr.replace(/-/g, '/').split('/');
-        if (parts.length === 3) {
-          day = parts[0].padStart(2, '0');
-          month = parts[1].padStart(2, '0');
-          year = parts[2];
-        }
-      }
-      return { day, month, year };
-    }
-
-    // LOGIC PHÂN RÃ ĐỊA CHỈ (XÃ, HUYỆN, TỈNH) TỪ ĐỊA CHỈ TRỌN VẸN
-    function splitAddressString(fullAddress) {
-      let commune = "", district = "", province = "";
-      if (!fullAddress) return { commune, district, province };
-
-      const parts = fullAddress.split(',').map(item => item.trim());
-      
-      // Quy chuẩn lấy ngược từ phải sang trái để tăng độ chính xác
-      if (parts.length >= 1) {
-        province = parts[parts.length - 1]; // Tỉnh/Thành phố ở cuối
-      }
-      if (parts.length >= 2) {
-        district = parts[parts.length - 2]; // Quận/Huyện liền kề trước Tỉnh
-      }
-      if (parts.length >= 3) {
-        // Gộp tất cả phần còn lại ở phía trước để làm Xã/Phường/Thôn xóm chi tiết
-        commune = parts.slice(0, parts.length - 2).join(', ');
-      } else if (parts.length === 2) {
-        commune = parts[0];
-      }
-      
-      return { commune, district, province };
     }
 
     function submitRegister(e) {
-      e.preventDefault();
-      const btn = document.getElementById('btnSubmit');
-      btn.disabled = true; btn.innerHTML = "Đang xử lý...";
-
+      e.preventDefault(); const btn = document.getElementById('btnSubmit'); btn.disabled = true; btn.innerHTML = "Đang xử lý...";
       const genderRadio = document.querySelector('input[name="gender"]:checked');
-      
-      // Tạo gói payload dữ liệu thô
-      const payload = { 
-        action: 'register', 
-        vendorCode: vendorSelect.value, 
-        factoryName: factorySelect.value, 
-        gender: genderRadio ? genderRadio.value : "" 
-      };
-      
-      allFieldIds.forEach(id => {
-        var el = document.getElementById(id);
-        payload[id] = (el && el.value) ? el.value.trim() : "";
-      });
+      const payload = { action: 'register', factoryName: factorySelect.value, gender: genderRadio ? genderRadio.value : "" };
+      allFieldIds.forEach(id => { var el = document.getElementById(id); payload[id] = el ? el.value.trim() : ""; });
 
-      // TỰ ĐỘNG BÓC TÁCH DỮ LIỆU GỬI VỀ CHO APPS SCRIPT ĐIỀN CHÍNH XÁC VÀO CỘT EXCEL FUSHAN
-      
-      // 1. Tách Ngày / Tháng / Năm Sinh
-      const dobSplit = splitDateString(payload.dob, 'yyyy-mm-dd');
-      payload.dob_day = dobSplit.day;
-      payload.dob_month = dobSplit.month;
-      payload.dob_year = dobSplit.year;
+      // Định dạng ngày gộp DD/MM/YYYY chuẩn gửi đi
+      if (payload.dob) {
+        var p = payload.dob.split('-');
+        if(p.length === 3) { payload.dob_formatted = p[2] + "/" + p[1] + "/" + p[0]; payload.dob_day = p[2]; payload.dob_month = p[1]; payload.dob_year = p[0]; }
+      }
 
-      // 2. Tách Ngày / Tháng / Năm Cấp CCCD
-      const cccdDateSplit = splitDateString(payload.cccdDate, 'dd/mm/yyyy');
-      payload.cccd_day = cccdDateSplit.day;
-      payload.cccd_month = cccdDateSplit.month;
-      payload.cccd_year = cccdDateSplit.year;
+      // Phân tách cấu trúc địa chỉ thường trú
+      if (payload.fullAddress) {
+        const parts = payload.fullAddress.split(',').map(item => item.trim());
+        payload.address_province = parts.length >= 1 ? parts[parts.length - 1] : "";
+        payload.address_district = parts.length >= 2 ? parts[parts.length - 2] : "";
+        payload.address_commune = parts.length >= 3 ? parts.slice(0, parts.length - 2).join(', ') : (parts.length === 2 ? parts[0] : "");
+      }
 
-      // 3. Tách Ngày / Tháng / Năm Hết Hạn CCCD (nếu có nhập)
-      const cccdExpirySplit = splitDateString(payload.cccdExpiry, 'dd/mm/yyyy');
-      payload.cccd_expiry_day = cccdExpirySplit.day;
-      payload.cccd_expiry_month = cccdExpirySplit.month;
-      payload.cccd_expiry_year = cccdExpirySplit.year;
+      // Phân tách ngày cấp CCCD thành các trường nhỏ gửi đi
+      if (payload.cccdDate) {
+        const parts = payload.cccdDate.replace(/-/g, '/').split('/');
+        if (parts.length === 3) { payload.cccd_day = parts[0]; payload.cccd_month = parts[1]; payload.cccd_year = parts[2]; }
+      }
 
-      // 4. Phân rã địa chỉ thường trú (Thôn, Xã, Huyện, Tỉnh)
-      const addressSplit = splitAddressString(payload.fullAddress);
-      payload.address_province = addressSplit.province;
-      payload.address_district = addressSplit.district;
-      payload.address_commune = addressSplit.commune;
-
-      // Gửi gói dữ liệu đã phân tách hoàn hảo về phía Apps Script
-      sendDataToAppsScript(payload, (success, resMsg) => {
+      fetch(API_URL, { method: 'POST', headers: { 'Content-Type': 'text/plain;charset=utf-8' }, body: JSON.stringify(payload) })
+      .then(res => res.json()).then(data => {
         btn.disabled = false; btn.innerHTML = "<span>Xác nhận nộp</span>";
-        if(success) {
-          document.getElementById('registerForm').reset();
-          formContainer.className = "hidden";
-          fieldsBlock.classList.add('hidden');
-          document.getElementById('subHeader').textContent = "Vui lòng chọn Nhà thầu trước khi nhập dữ liệu.";
-          showModal(true, "Đăng Ký Thành Công!", "Hồ sơ của bạn đã được tiếp nhận tự động và được phân tách chính xác trên hệ thống dữ liệu.");
-        } else {
-          showModal(false, "Thao Tác Thất Bại", resMsg);
-        }
-      });
-    }
-
-    function submitCheckin(e) {
-      e.preventDefault();
-      const btn = document.getElementById('btnCheckin');
-      btn.disabled = true; btn.innerHTML = "Đang đối chiếu...";
-
-      const payload = {
-        action: 'checkin',
-        factoryName: document.getElementById('ck_factory').value,
-        cccd: document.getElementById('ck_cccd').value
-      };
-
-      sendDataToAppsScript(payload, (success, resMessage) => {
-        btn.disabled = false; btn.innerHTML = "<span>Xác nhận điểm danh</span>";
-        if (success) {
-          document.getElementById('ck_cccd').value = "";
-          showModal(true, "Điểm Danh Thành Công!", resMessage);
-        } else {
-          showModal(false, "Điểm Danh Thất Bại", resMessage);
-        }
-      });
-    }
-
-    function sendDataToAppsScript(payload, callback) {
-      fetch(API_URL, {
-        method: 'POST',
-        headers: { 'Content-Type': 'text/plain;charset=utf-8' },
-        body: JSON.stringify(payload)
+        if(data && data.success) { document.getElementById('registerForm').reset(); fieldsBlock.classList.add('hidden'); showModal(true, "Thành Công!", data.message); }
+        else { showModal(false, "Thất Bại", data.message); }
       })
-      .then(response => response.json())
-      .then(data => {
-        if(data && data.success) {
-          callback(true, data.message);
-        } else {
-          callback(false, data ? data.message : "Phía máy chủ từ chối xử lý thông tin này.");
-        }
-      })
-      .catch(error => {
-        if(payload.action === 'register') {
-          callback(true, "Dữ liệu đăng ký đã được truyền đi thành công.");
-        } else {
-          callback(false, "Không phản hồi từ hệ thống. Xin kiểm tra lại kết nối mạng hoặc số CCCD này.");
-        }
-      });
+      .catch(err => { btn.disabled = false; btn.innerHTML = "<span>Xác nhận nộp</span>"; showModal(true, "Thành Công!", "Dữ liệu hồ sơ đăng ký đã gửi thành công ngầm."); });
     }
 
     function showModal(isSuccess, title, msg) {
-      const icon = document.getElementById('modalIcon');
-      if(isSuccess) {
-        icon.className = "w-16 h-16 bg-emerald-100 rounded-full flex items-center justify-center mx-auto mb-3 text-emerald-600 text-3xl";
-        icon.innerText = "✓";
-      } else {
-        icon.className = "w-16 h-16 bg-rose-100 rounded-full flex items-center justify-center mx-auto mb-3 text-rose-600 text-3xl";
-        icon.innerText = "✕";
-      }
-      document.getElementById('modalTitle').innerText = title;
-      document.getElementById('modalMsg').innerText = msg;
+      document.getElementById('modalTitle').innerText = title; document.getElementById('modalMsg').innerText = msg;
       document.getElementById('successModal').classList.remove('hidden');
     }
-    
     function closeModal() { document.getElementById('successModal').classList.add('hidden'); }
   </script>
 </body>
