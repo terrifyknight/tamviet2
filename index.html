@@ -100,6 +100,7 @@
     let html5QrCode = null, isCamOpen = false;
     const allFieldIds = ['interviewDate', 'fullname', 'dob', 'maritalStatus', 'phone', 'cccd', 'cccdDate', 'cccdExpiry', 'ethnicity', 'relativeName', 'relativeRelation', 'relativePhone', 'relativeAddress', 'fullAddress', 'socialInsurance', 'schoolName', 'educationLevel', 'note'];
     const factorySelect = document.getElementById('factoryCode'), fieldsBlock = document.getElementById('fieldsBlock');
+    let isLastSubmissionSuccess = false; // Biến cờ ghi nhận trạng thái nộp thành công
 
     function onFactoryChange() { 
       const fCode = factorySelect.value; 
@@ -182,17 +183,63 @@
       fetch(API_URL, { method: 'POST', headers: { 'Content-Type': 'text/plain;charset=utf-8' }, body: JSON.stringify(payload) })
       .then(res => res.json()).then(data => {
         btn.disabled = false; btn.innerHTML = "<span>Xác nhận nộp</span>";
-        if(data && data.success) { document.getElementById('registerForm').reset(); fieldsBlock.classList.add('hidden'); showModal(true, "Thành Công!", data.message); }
-        else { showModal(false, "Thất Bại", data.message); }
+        if(data && data.success) { 
+          isLastSubmissionSuccess = true; // Bấm nút "Đóng" modal sẽ reset form về trắng
+          showModal(true, "Thành Công!", data.message); 
+        } else { 
+          isLastSubmissionSuccess = false; // Lỗi trùng CCCD / lỗi nghiệp vụ, không reset form để họ sửa thông tin
+          showModal(false, "Thất Bại", data.message); 
+        }
       })
-      .catch(err => { btn.disabled = false; btn.innerHTML = "<span>Xác nhận nộp</span>"; showModal(true, "Thành Công!", "Dữ liệu hồ sơ đăng ký đã gửi thành công ngầm."); });
+      .catch(err => { 
+        btn.disabled = false; btn.innerHTML = "<span>Xác nhận nộp</span>"; 
+        isLastSubmissionSuccess = true; // Gửi ngầm (Offline) cũng được tính là hoàn thành phiên đăng ký
+        showModal(true, "Thành Công!", "Dữ liệu hồ sơ đăng ký đã gửi thành công ngầm."); 
+      });
     }
 
     function showModal(isSuccess, title, msg) {
-      document.getElementById('modalTitle').innerText = title; document.getElementById('modalMsg').innerText = msg;
+      const modalIcon = document.getElementById('modalIcon');
+      if (isSuccess) {
+        modalIcon.innerText = "✓";
+        modalIcon.className = "w-16 h-16 bg-emerald-100 rounded-full flex items-center justify-center mx-auto mb-3 text-emerald-600 text-3xl";
+      } else {
+        modalIcon.innerText = "✕";
+        modalIcon.className = "w-16 h-16 bg-red-100 rounded-full flex items-center justify-center mx-auto mb-3 text-red-600 text-3xl";
+      }
+      document.getElementById('modalTitle').innerText = title; 
+      document.getElementById('modalMsg').innerText = msg;
       document.getElementById('successModal').classList.remove('hidden');
     }
-    function closeModal() { document.getElementById('successModal').classList.add('hidden'); }
+
+    // HÀM RESET TOÀN BỘ FORM VÀ ĐƯA GIAO DIỆN VỀ TRẠNG THÁI KHỞI ĐẦU
+    function resetMyForm() {
+      // 1. Reset form về giá trị trống
+      document.getElementById('registerForm').reset();
+      
+      // 2. Bỏ tích chọn giới tính
+      const genderRadios = document.querySelectorAll('input[name="gender"]');
+      genderRadios.forEach(radio => radio.checked = false);
+
+      // 3. Ẩn toàn bộ các khối trường thông tin động
+      fieldsBlock.classList.add('hidden');
+      allFieldIds.forEach(id => {
+        const div = document.getElementById('div_' + id);
+        if (div) div.style.display = 'none';
+        const el = document.getElementById(id);
+        if (el) el.removeAttribute('required');
+      });
+      
+      console.log("Đã làm sạch toàn bộ dữ liệu form!");
+    }
+
+    function closeModal() { 
+      document.getElementById('successModal').classList.add('hidden'); 
+      // Chỉ reset form khi giao dịch thực sự thành công/gửi ngầm thành công
+      if (isLastSubmissionSuccess) {
+        resetMyForm();
+      }
+    }
   </script>
 </body>
 </html>
